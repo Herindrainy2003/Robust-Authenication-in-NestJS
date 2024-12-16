@@ -7,9 +7,21 @@ import { PassportModule } from '@nestjs/passport';
 import { LocalStrategy } from './strategy/local.strategy';
 import { UserModule } from 'src/user/user.module';
 import { UserService } from 'src/user/user.service';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
-  imports : [TypeOrmModule.forFeature([User]) , PassportModule] ,
+  imports : [
+    TypeOrmModule.forFeature([User]),
+    
+    //configuration de notre JWT
+    JwtModule.register({
+      secret  : "",
+      signOptions : {
+        expiresIn : "1d" //le temps d'expiration de notre token
+      }
+    })
+    , PassportModule
+  ] ,
   controllers: [AuthController],
   providers: [AuthService ,LocalStrategy ,UserService],
 })
