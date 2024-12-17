@@ -8,21 +8,26 @@ import { LocalStrategy } from './strategy/local.strategy';
 import { UserModule } from 'src/user/user.module';
 import { UserService } from 'src/user/user.service';
 import { JwtModule } from '@nestjs/jwt';
+import jwtConfig from './config/jwt.config';
+import { ConfigModule } from '@nestjs/config';
+import { JwtStrategy } from './strategy/jwt.strategy';
 
 @Module({
+
   imports : [
+
+    PassportModule,
+    JwtModule,
+    UserModule,
     TypeOrmModule.forFeature([User]),
     
-    //configuration de notre JWT
-    JwtModule.register({
-      secret  : "",
-      signOptions : {
-        expiresIn : "1d" //le temps d'expiration de notre token
-      }
-    })
-    , PassportModule
-  ] ,
+    JwtModule.registerAsync(jwtConfig.asProvider()), //appelle a notre jwt configuration 
+    
+    ConfigModule.forFeature(jwtConfig)
+  ],
+
   controllers: [AuthController],
-  providers: [AuthService ,LocalStrategy ,UserService],
+  providers: [AuthService ,LocalStrategy ,UserService ,JwtStrategy],
 })
+
 export class AuthModule {}
