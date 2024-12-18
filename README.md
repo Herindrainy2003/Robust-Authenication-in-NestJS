@@ -41,3 +41,23 @@ $ npm install
 $ npm run start:dev
 $ Your API is run in  localhost:3000  and follow all Testing API
 ```
+## your .env file 
+
+```bash
+
+
+    - POSTGRES_HOST=your host
+    - POSTGRES_PORT=your port
+    - POSTGRES_USER= tour database
+    - POSTGRES_PASSWORD=your pwd
+    - POSTGRES_DB= your db
+
+
+    - JWT_SECRET = f064d455ba37fddf5659ee4b16e75da3b4cc920ee4bbb0b0f6cdd17574e62a38fab1f73bd5b86a4cb90b39478f995d6e545960f03d2602f67bcdbbe26e9a5120 it's in sample example
+    - JWT_EXPIRED = 2min it's in sample example
+
+
+
+    - REFRESH_JWT_SECRET = 34e05e0b41452aa74cfcdacb672660d869dcd2b6fa36245d4fc4f4735c70b839 it's in sample example
+    - REFRESH_JWT_EXPIRED = 1d it's in sample example
+```
