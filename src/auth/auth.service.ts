@@ -7,6 +7,7 @@ import { UserService } from 'src/user/user.service';
 import { AuthJwtPayload } from './types/auth-jwtPayload';
 import refreshJwtConfig from './config/refresh-jwt.config';
 import { ConfigType } from '@nestjs/config';
+import * as argon2 from 'argon2';
 
 
 @Injectable()
@@ -15,7 +16,7 @@ export class AuthService {
   
   constructor(
     
-    private userSerice : UserService ,
+    private userService : UserService ,
 
     private jwtService : JwtService ,
 
@@ -27,7 +28,7 @@ export class AuthService {
   // creation tous les logiques de notre authentification comme le mot de passe crypter . la verification de l'user
   async validateUser(email: string, password: string): Promise<User | null> {
    
-    const user = await this.userSerice.findByemail(email); // recuperation de l'utilisateur
+    const user = await this.userService.findByemail(email); // recuperation de l'utilisateur
 
     if(!user) throw new NotFoundException("Verifie bien votre email ou votre mot de passe")
 
@@ -43,19 +44,35 @@ export class AuthService {
 
   async login(userId : number){
      
-    const payload : AuthJwtPayload =  {sub : userId}
    
-     const token =  this.jwtService.sign(payload)
+    const {accesToken , refreshToken} = await this.genereteToken(userId)
     
-     const refreshToken = this.jwtService.sign(payload , this.refreshTokenConfig )
-   
+    //hasher notre Token en utilisant  argon2
+    const hashedRefreshToken = await argon2.hash(refreshToken)
+
+    await this.userService.updateHashedRefreahToken(userId , hashedRefreshToken)
+
     return {
       id : userId,
-      refreshToken , 
-      token
+      accesToken,
+      refreshToken
     }
   }
  
+  //fonction pour generer le token
+
+  async genereteToken(userId : number){
+    const payload : AuthJwtPayload = {sub : userId};
+    const [accesToken , refreshToken] = await Promise.all([
+      this.jwtService.signAsync(payload),
+      this.jwtService.signAsync(payload , this.refreshTokenConfig )
+    ]); 
+    return {
+      accesToken , 
+      refreshToken
+    }
+  } 
+
 
   async refreshToken(userId: number) {
     const payload : AuthJwtPayload =  {sub : userId}

@@ -14,6 +14,8 @@ export class User {
     @Column()
     password : string
 
+    @Column()
+    hashedRefreshToken : string
     @BeforeInsert()
     async hashPassword(){
        return  this.password = await bcrypt.hash(this.password , 10)

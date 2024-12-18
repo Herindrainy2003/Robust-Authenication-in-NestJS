@@ -42,4 +42,10 @@ export class UserService {
   }
 
 
+//
+  async updateHashedRefreahToken(userId:number , hashedRefreshToken :string) {
+    return await this.userRepository.update({ id : userId} , {hashedRefreshToken})
+  
+
+  }
 }
