@@ -9,6 +9,8 @@ import { JwtModule } from '@nestjs/jwt';
 import jwtConfig from './config/jwt.config';
 import { ConfigModule } from '@nestjs/config';
 import { JwtStrategy } from './strategy/jwt.strategy';
+import refreshJwtConfig from './config/refresh-jwt.config';
+import { refreshJwtStrategy } from './strategy/refreshjwt.strategy';
 
 @Module({
 
@@ -18,11 +20,12 @@ import { JwtStrategy } from './strategy/jwt.strategy';
     
     JwtModule.registerAsync(jwtConfig.asProvider()), //appelle a notre jwt configuration 
     
-    ConfigModule.forFeature(jwtConfig) 
+    ConfigModule.forFeature(jwtConfig) ,
+    ConfigModule.forFeature(refreshJwtConfig)
   ],
 
   controllers: [AuthController],
-  providers: [AuthService ,LocalStrategy ,UserService ,JwtStrategy],
+  providers: [AuthService ,LocalStrategy ,UserService ,JwtStrategy ,refreshJwtStrategy],
 })
 
 export class AuthModule {}

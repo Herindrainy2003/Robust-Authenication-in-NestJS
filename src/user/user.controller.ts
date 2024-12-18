@@ -16,6 +16,7 @@ export class UserController {
 @UseGuards(JwtAuthGuard)
  @Get('profile')
  getprofile(@Req() req){
+  console.log("par le user controller")
   if (!req.user) {
     throw new UnauthorizedException('une probleme de recuperation de user dans la requete');
   }
